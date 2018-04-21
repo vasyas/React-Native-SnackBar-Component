@@ -6,7 +6,8 @@ import {
   View,
   Image,
   Animated,
-  Easing
+  Easing,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Touchable } from './src';
 import { noop } from './src/utils';
@@ -57,12 +58,14 @@ class SnackbarComponent extends Component {
             this.setState({hideDistance: event.nativeEvent.layout.height});
           }}
         >
-          <Text style={[styles.text_msg, {color: this.props.messageColor}]}>{this.props.textMessage}</Text>
-          {this.props.actionHandler && this.props.actionText &&
-            <Touchable onPress={() => {this.props.actionHandler()}} >
-              <Text style={[styles.action_text, {color: this.props.accentColor}]}>{this.props.actionText.toUpperCase()}</Text>
-            </Touchable>
-          }
+          <TouchableWithoutFeedback onPress={this.props.actionHandler}>
+            <View style={styles.body}>
+              <Text style={[styles.text_msg, {color: this.props.messageColor}]}>{this.props.textMessage}</Text>
+              {this.props.actionText &&
+                <Text style={[styles.action_text, {color: this.props.accentColor}]}>{this.props.actionText.toUpperCase()}</Text>
+              }
+            </View>
+          </TouchableWithoutFeedback>
         </Animated.View>
       </Animated.View>
     );
@@ -140,16 +143,18 @@ const styles = StyleSheet.create({
     zIndex: 9999,
   },
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     position: 'absolute',
     left: 0,
     right: 0,
+  },
+  body: {
     paddingLeft: 24,
     paddingRight: 24,
     paddingTop: 14,
-    paddingBottom: 14
+    paddingBottom: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   text_msg: {
     fontSize: 14,
